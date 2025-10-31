@@ -227,12 +227,8 @@ anchor deploy --provider.cluster devnet
 
 ![DNA Extraction Visual](docs/dna-extraction-visual.png)
 
-The image above demonstrates how ProTRACE extracts a unique 256-bit DNA hash from a digital asset:
+The image above demonstrates how ProTRACE extracts a unique 256-bit DNA hash from a digital asset.
 
-- **Left:** Original digital asset (3D rendered scene)
-- **Top Right:** 256-bit DNA hash in hexadecimal format
-- **Middle:** Horizontal gradient analysis (128 bits) - captures left-to-right intensity changes
-- **Bottom:** Vertical gradient analysis (128 bits) - captures top-to-bottom intensity changes
 
 **Key Properties:**
 - ✅ **Perceptual Hashing**: Detects similar images even after compression/resizing
