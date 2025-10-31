@@ -1,0 +1,293 @@
+{
+  "tech_stack": [
+    "Python 3.10+",
+    "FastAPI",
+    "PIL/Pillow (Image Processing)",
+    "NumPy",
+    "BLAKE3 Hashing",
+    "Solana Blockchain (Devnet)"
+  ],
+  "features": [
+    {
+      "name": "Root Info",
+      "description": "Get API information and available endpoints",
+      "files": ["ProPy/api_testnet.py"],
+      "api_doc": {
+        "openapi": "3.0.0",
+        "paths": {
+          "/": {
+            "get": {
+              "summary": "API root endpoint",
+              "responses": {
+                "200": {
+                  "description": "API information",
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "type": "object",
+                        "properties": {
+                          "name": {"type": "string"},
+                          "version": {"type": "string"},
+                          "network": {"type": "string"},
+                          "program_id": {"type": "string"},
+                          "endpoints": {"type": "object"}
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "Health Check",
+      "description": "Check API health and availability",
+      "files": ["ProPy/api_testnet.py"],
+      "api_doc": {
+        "openapi": "3.0.0",
+        "paths": {
+          "/health": {
+            "get": {
+              "summary": "Health check endpoint",
+              "responses": {
+                "200": {
+                  "description": "API health status"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "DNA Extraction",
+      "description": "Extract 256-bit DNA fingerprint from uploaded image using dHash and Grid Hash algorithms",
+      "files": [
+        "ProPy/api_testnet.py",
+        "ProPy/modules/protrace_legacy/image_dna.py"
+      ],
+      "api_doc": {
+        "openapi": "3.0.0",
+        "paths": {
+          "/dna/extract": {
+            "post": {
+              "summary": "Extract DNA fingerprint from image",
+              "requestBody": {
+                "content": {
+                  "multipart/form-data": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "file": {
+                          "type": "string",
+                          "format": "binary",
+                          "description": "Image file (PNG, JPEG, GIF, etc.)"
+                        }
+                      },
+                      "required": ["file"]
+                    }
+                  }
+                }
+              },
+              "responses": {
+                "200": {
+                  "description": "DNA extraction successful",
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "type": "object",
+                        "properties": {
+                          "success": {"type": "boolean"},
+                          "dna_hash": {"type": "string", "description": "256-bit DNA hash (64 hex chars)"},
+                          "dhash": {"type": "string", "description": "64-bit dHash component"},
+                          "grid_hash": {"type": "string", "description": "192-bit Grid Hash component"},
+                          "algorithm": {"type": "string"},
+                          "bits": {"type": "integer"},
+                          "extraction_time_ms": {"type": "number"}
+                        }
+                      }
+                    }
+                  }
+                },
+                "500": {
+                  "description": "DNA extraction failed"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "Merkle Tree Creation",
+      "description": "Create BLAKE3-based Merkle tree from DNA hashes for batch verification",
+      "files": [
+        "ProPy/api_testnet.py",
+        "ProPy/modules/protrace_legacy/merkle.py"
+      ],
+      "api_doc": {
+        "openapi": "3.0.0",
+        "paths": {
+          "/merkle/create": {
+            "post": {
+              "summary": "Create Merkle tree from DNA hashes",
+              "requestBody": {
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "leaves": {
+                          "type": "array",
+                          "items": {"type": "string"},
+                          "description": "Array of DNA hashes"
+                        },
+                        "metadata": {
+                          "type": "object",
+                          "description": "Optional metadata"
+                        }
+                      },
+                      "required": ["leaves"]
+                    }
+                  }
+                }
+              },
+              "responses": {
+                "200": {
+                  "description": "Merkle tree created successfully",
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "type": "object",
+                        "properties": {
+                          "success": {"type": "boolean"},
+                          "root": {"type": "string", "description": "Merkle root hash"},
+                          "leaf_count": {"type": "integer"},
+                          "network": {"type": "string"},
+                          "generation_time_ms": {"type": "number"}
+                        }
+                      }
+                    }
+                  }
+                },
+                "400": {
+                  "description": "Invalid input"
+                },
+                "500": {
+                  "description": "Merkle tree creation failed"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "Merkle Proof Verification",
+      "description": "Verify Merkle proof for a specific leaf in the tree",
+      "files": [
+        "ProPy/api_testnet.py",
+        "ProPy/modules/protrace_legacy/merkle.py"
+      ],
+      "api_doc": {
+        "openapi": "3.0.0",
+        "paths": {
+          "/merkle/verify": {
+            "post": {
+              "summary": "Verify Merkle proof",
+              "parameters": [
+                {
+                  "name": "leaf_index",
+                  "in": "query",
+                  "required": true,
+                  "schema": {"type": "integer"}
+                },
+                {
+                  "name": "root",
+                  "in": "query",
+                  "required": true,
+                  "schema": {"type": "string"}
+                }
+              ],
+              "requestBody": {
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "proof": {
+                          "type": "array",
+                          "items": {"type": "string"}
+                        }
+                      },
+                      "required": ["proof"]
+                    }
+                  }
+                }
+              },
+              "responses": {
+                "200": {
+                  "description": "Proof verification result",
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "type": "object",
+                        "properties": {
+                          "success": {"type": "boolean"},
+                          "valid": {"type": "boolean"},
+                          "leaf_index": {"type": "integer"},
+                          "root": {"type": "string"},
+                          "proof_size": {"type": "integer"}
+                        }
+                      }
+                    }
+                  }
+                },
+                "500": {
+                  "description": "Proof verification failed"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "Solana Program Info",
+      "description": "Get deployed Solana program information on Devnet",
+      "files": ["ProPy/api_testnet.py"],
+      "api_doc": {
+        "openapi": "3.0.0",
+        "paths": {
+          "/info/program": {
+            "get": {
+              "summary": "Get Solana program information",
+              "responses": {
+                "200": {
+                  "description": "Solana program details",
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "type": "object",
+                        "properties": {
+                          "program_id": {"type": "string"},
+                          "network": {"type": "string"},
+                          "rpc_url": {"type": "string"},
+                          "explorer": {"type": "string"},
+                          "instructions": {"type": "array"}
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}

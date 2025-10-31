@@ -8,6 +8,7 @@ import sys
 import os
 from pathlib import Path
 import tempfile
+import time
 
 # Add ProPy to path
 sys.path.insert(0, str(Path(__file__).parent.parent / "ProPy"))
@@ -147,8 +148,12 @@ if python_modules_available:
         print(f"✅ Generated {len(leaves)} leaf hashes")
         
         # Build tree
-        python_merkle_tree = MerkleTree(leaves)
-        python_merkle_root = python_merkle_tree.get_root_hex()
+        python_merkle_tree = MerkleTree()
+        for i, leaf_hash in enumerate(leaves):
+            pointer = f"ipfs://Qm{hashlib.sha256(f'pointer_{i}'.encode()).hexdigest()[:44]}"
+            platform_id = f"platform_{i}"
+            python_merkle_tree.add_leaf(leaf_hash, pointer, platform_id, int(time.time()))
+        python_merkle_root = python_merkle_tree.build_tree()
         
         print(f"✅ Merkle tree built")
         print(f"✅ Root:        {python_merkle_root[:32]}...{python_merkle_root[-8:]}")
@@ -168,12 +173,12 @@ if python_modules_available and python_merkle_tree and python_merkle_root:
     try:
         # Get proof for first leaf (index 0)
         proof = python_merkle_tree.get_proof(0)
-        leaf_hash = leaves[0]
+        leaf_data = python_merkle_tree.leaves[0]
         
         # Verify proof
-        is_valid = python_merkle_tree.verify_proof(0, proof)
+        is_valid = python_merkle_tree.verify_proof(leaf_data, proof, python_merkle_root)
         
-        print(f"✅ Leaf:       {leaf_hash[:32]}...")
+        print(f"✅ Leaf index: 0")
         print(f"✅ Proof size: {len(proof)}")
         print(f"✅ Valid:      {is_valid}")
         

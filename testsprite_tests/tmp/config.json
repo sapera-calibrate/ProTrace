@@ -1,0 +1,16 @@
+{
+  "status": "commited",
+  "type": "backend",
+  "scope": "codebase",
+  "localEndpoint": "http://localhost:8000",
+  "backendAuthType": "public",
+  "executionArgs": {
+    "projectName": "ProTRACE",
+    "projectPath": "d:\\ProTRACE - Copy - Copy\\ProTRACE",
+    "testIds": [],
+    "additionalInstruction": "",
+    "envs": {
+      "API_KEY": "sk-user-lTmEYoUczY3Cjs6N0SSJPhu6ve1aNbUtzem5peud3YYhAKo5N5SE4BYcDAWL4QmFe8I4LPtOBidLAOVQXeowGwbcM7zx108IouLRBnV66EPTzY6lQBIl4ckltYLtGx6t3z0"
+    }
+  }
+}

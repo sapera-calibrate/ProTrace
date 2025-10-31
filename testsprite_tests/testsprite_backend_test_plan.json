@@ -1,0 +1,37 @@
+[
+  {
+    "id": "TC001",
+    "title": "test_dna_extraction_with_valid_image",
+    "description": "Verify that the /dna/extract endpoint correctly processes valid image files (PNG, JPEG, GIF) and returns a 64-character hexadecimal DNA hash including both dHash and Grid Hash components within 100ms."
+  },
+  {
+    "id": "TC002",
+    "title": "test_dna_extraction_with_invalid_image",
+    "description": "Verify that the /dna/extract endpoint gracefully handles corrupt or invalid image files by returning appropriate error messages without crashing."
+  },
+  {
+    "id": "TC003",
+    "title": "test_merkle_tree_creation_with_valid_hashes",
+    "description": "Verify that the /merkle/create endpoint accepts an array of DNA hashes, generates a valid BLAKE3-based Merkle root hash, returns the tree structure with leaf count, supports a minimum of 5 leaves, and completes processing within 50ms for 1000 leaves."
+  },
+  {
+    "id": "TC004",
+    "title": "test_merkle_proof_verification_valid_proof",
+    "description": "Verify that the /merkle/verify endpoint accepts a leaf index and proof array, correctly verifies the proof against the root hash, returns a boolean validation result, supports O(log n) proof size, and completes verification within 1ms."
+  },
+  {
+    "id": "TC005",
+    "title": "test_health_check_endpoint",
+    "description": "Verify that the /health endpoint returns a 200 status code when the API is healthy, includes a timestamp and status in the response, and responds within 10ms."
+  },
+  {
+    "id": "TC006",
+    "title": "test_api_information_endpoint",
+    "description": "Verify that the / endpoint returns API metadata including all available endpoints, API version, network, Solana program ID, and the feature list."
+  },
+  {
+    "id": "TC007",
+    "title": "test_solana_program_info_endpoint",
+    "description": "Verify that the /info/program endpoint returns the correct Solana program ID (7cjcAJv1fgJdwVSrabX9yVXCgyK1gKVnRUBFs1ZcG2sG), network as Devnet, includes an explorer link, and lists available instructions."
+  }
+]
