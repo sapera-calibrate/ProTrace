@@ -2,7 +2,10 @@
 
 **Blockchain-based DNA Fingerprinting & Merkle Root Anchoring for Digital Assets**
 
-Production-grade Rust implementation with Python SDK for image DNA extraction and on-chain verification.
+ProTrace provides pre-mint verification of digital assets, ensuring every NFT or media file is authenticated for originality and uniqueness before hitting the blockchain. It blocks duplicates and counterfeits at the source, achieving trustless provenance across multiple chains → all without gas costs.
+
+The system combines perceptual DNA hashing, zero-knowledge verification, and Merkle-based proofs to secure assets while keeping the workflow lightweight, decentralized, and cross-chain.
+
 
 ---
 
