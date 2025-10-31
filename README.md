@@ -714,16 +714,6 @@ def classify_similarity(img1, img2):
 
 ## 💼 Commercial Use
 
-### Licensing
-
-ProTRACE is licensed under the MIT License, allowing:
-- ✅ Commercial use
-- ✅ Modification
-- ✅ Distribution
-- ✅ Private use
-
-See [LICENSE](LICENSE) for full details.
-
 ### Integration Services
 
 Need help integrating ProTRACE into your platform?
@@ -735,23 +725,6 @@ Need help integrating ProTRACE into your platform?
 
 ---
 
-## 🎓 Learn More
-
-### Resources
-
-- **Perceptual Hashing**: [Article](https://www.phash.org/)
-- **Merkle Trees**: [Wikipedia](https://en.wikipedia.org/wiki/Merkle_tree)
-- **BLAKE3**: [Official Site](https://github.com/BLAKE3-team/BLAKE3)
-- **Solana Docs**: [docs.solana.com](https://docs.solana.com/)
-- **Anchor Framework**: [anchor-lang.com](https://www.anchor-lang.com/)
-
-### Research Papers
-
-- "Perceptual Image Hashing: A Survey" (IEEE, 2020)
-- "BLAKE3: One Function, Fast Everywhere" (2020)
-- "Merkle Trees for Data Verification" (1979)
-
----
 
 ## 📞 Community & Support
 
@@ -761,12 +734,6 @@ Need help integrating ProTRACE into your platform?
 - 🐦 **Twitter**: (Coming soon)
 - 📧 **Email**: hello@protrace.io
 - 🐛 **Bug Reports**: [GitHub Issues](https://github.com/ProTRACE/ProTRACE/issues)
-
-### Stay Updated
-
-- ⭐ **Star on GitHub**: Get notifications for releases
-- 📬 **Newsletter**: (Coming soon)
-- 📝 **Blog**: (Coming soon)
 
 ---
 
