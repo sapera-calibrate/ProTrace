@@ -1,0 +1,29 @@
+[project]
+name = "protrace-py"
+version = "1.0.0"
+description = "ProTRACE Python Testing Suite"
+requires-python = ">=3.10"
+dependencies = [
+    "solana>=0.30.0",
+    "anchorpy>=0.19.0",
+    "blake3>=0.4.0",
+    "Pillow>=10.0.0",
+    "numpy>=1.24.0",
+    "ipfshttpclient>=0.8.0a2",
+    "pytest>=8.0.0",
+    "pytest-asyncio>=0.23.0",
+    "pytest-cov>=5.0.0",
+    "fastapi>=0.100.0",
+    "uvicorn>=0.25.0",
+]
+
+[build-system]
+requires = ["setuptools>=68.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = "-v --cov=contracts --cov=sdk --cov-report=html --cov-report=term"

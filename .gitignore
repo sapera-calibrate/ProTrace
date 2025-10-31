@@ -1,0 +1,16 @@
+﻿__pycache__/
+*.pyc
+*.pyo
+venv/
+env/
+target/
+.anchor/
+test-ledger/
+backup_old_docs/
+.DS_Store
+*.log
+.env
+.vscode/
+.idea/
+node_modules/
+Cargo.lock

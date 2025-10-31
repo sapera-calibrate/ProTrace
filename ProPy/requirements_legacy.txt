@@ -1,0 +1,54 @@
+# ProTrace 2.0 - Cross-Platform NFT Duplicate Prevention Service
+# ================================================================
+
+# Core Image Processing (DNA Engine)
+Pillow>=10.1.0
+numpy>=1.26.2
+scipy>=1.11.4
+
+# Cryptography (BLAKE3 for Merkle trees)
+blake3>=0.4.1
+cryptography>=41.0.0
+
+# Blockchain & Web3 (EIP-712, Guardian Oracle)
+web3>=6.11.3
+eth-account>=0.10.0
+py-solana>=0.32.0
+anchorpy>=0.19.1
+solders>=0.20.0
+base58>=2.1.1
+
+# Database (Vector DB with pgvector)
+psycopg2-binary>=2.9.9
+# Note: pgvector extension requires PostgreSQL 11+ with pgvector installed
+
+# Storage (IPFS for manifests)
+ipfshttpclient>=0.8.0
+
+# Utilities
+python-dotenv>=1.0.0
+requests>=2.31.0
+click>=8.1.7
+pyyaml>=6.0.1
+
+# Legacy compatibility
+iscc-core>=1.0.8
+imagehash>=4.3.1
+
+# Development dependencies
+pytest>=7.4.0
+black>=23.0.0
+mypy>=1.5.0
+
+# Optional: API Framework (uncomment for Platform API)
+# fastapi==0.104.1
+# uvicorn[standard]==0.24.0
+# pydantic==2.5.0
+
+# Optional: Background Workers (uncomment for production)
+# celery==5.3.4
+# redis==5.0.1
+
+# Optional: Monitoring (uncomment for production)
+# prometheus-client==0.19.0
+# sentry-sdk==1.38.0

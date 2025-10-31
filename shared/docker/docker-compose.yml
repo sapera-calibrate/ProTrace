@@ -1,0 +1,92 @@
+version: '3.8'
+
+services:
+  # Main ProTrace Python application
+  protrace:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: protrace-app
+    volumes:
+      - ./registry:/app/registry
+      - ./V_ipfs:/app/V_ipfs
+      - ./V_on_chain:/app/V_on_chain
+      - ./V_off_chain:/app/V_off_chain
+      - ./To_be_minted:/app/To_be_minted
+      - ./logs:/app/logs
+    environment:
+      - PYTHONPATH=/app
+      - PYTHONUNBUFFERED=1
+    command: ["python", "protrace.py", "--help"]
+    networks:
+      - protrace-network
+
+  # ZK Proof System
+  zk-system:
+    build:
+      context: .
+      dockerfile: Dockerfile.zk
+    container_name: protrace-zk
+    volumes:
+      - zk-data:/app/data
+    command: ["poseidon_merkle_zk", "--help"]
+    networks:
+      - protrace-network
+
+  # IPFS Node (optional, for testing)
+  ipfs:
+    image: ipfs/go-ipfs:latest
+    container_name: protrace-ipfs
+    ports:
+      - "4001:4001"    # Swarm
+      - "5001:5001"    # API
+      - "8080:8080"    # Gateway
+    volumes:
+      - ipfs-data:/data/ipfs
+      - ipfs-export:/export
+    environment:
+      - IPFS_PATH=/data/ipfs
+    networks:
+      - protrace-network
+
+  # PostgreSQL for metadata storage (optional)
+  postgres:
+    image: postgres:15-alpine
+    container_name: protrace-db
+    environment:
+      POSTGRES_DB: protrace
+      POSTGRES_USER: protrace
+      POSTGRES_PASSWORD: protrace_password
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - protrace-network
+
+  # Redis for caching (optional)
+  redis:
+    image: redis:7-alpine
+    container_name: protrace-cache
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    networks:
+      - protrace-network
+
+volumes:
+  zk-data:
+    driver: local
+  ipfs-data:
+    driver: local
+  ipfs-export:
+    driver: local
+  postgres-data:
+    driver: local
+  redis-data:
+    driver: local
+
+networks:
+  protrace-network:
+    driver: bridge

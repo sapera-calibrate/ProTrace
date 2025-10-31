@@ -1,0 +1,24 @@
+[package]
+name = "protrace-blockchain"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+
+[dependencies]
+solana-sdk.workspace = true
+solana-client.workspace = true
+solana-program.workspace = true
+anchor-lang.workspace = true
+anchor-client.workspace = true
+tokio.workspace = true
+async-trait.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+anyhow.workspace = true
+thiserror.workspace = true
+hex.workspace = true
+bs58.workspace = true
+log.workspace = true
+
+protrace-merkle-tree = { path = "../merkle-tree" }

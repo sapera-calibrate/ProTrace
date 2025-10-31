@@ -1,0 +1,12 @@
+[package]
+name = "merkle_anchor_program"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+name = "merkle_anchor_program"
+crate-type = ["cdylib", "lib"]
+
+[dependencies]
+anchor-lang = "0.33.0"
+borsh = "0.10.3"

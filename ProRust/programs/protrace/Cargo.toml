@@ -1,0 +1,26 @@
+[package]
+name = "protrace"
+version = "0.1.0"
+description = "ProTrace Solana program for Merkle root anchoring"
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib", "lib"]
+name = "protrace"
+
+[features]
+no-entrypoint = []
+no-idl = []
+no-log-ix-name = []
+cpi = ["no-entrypoint"]
+default = []
+idl-build = ["anchor-lang/idl-build"]
+custom-heap = []
+custom-panic = []
+anchor-debug = []
+
+[dependencies]
+anchor-lang = { version = "0.32.1", features = ["init-if-needed"] }
+blake3 = "1.3"
+hex = "0.4"
+solana-security-txt = "1.1.1"
