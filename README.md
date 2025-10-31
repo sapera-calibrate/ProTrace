@@ -84,13 +84,13 @@ curl -X POST "http://localhost:8000/dna/extract" \
 
 ```bash
 # Extract DNA from single image
-python cli_testnet.py extract image.png
+python ProPy\cli_testnet.py extract image.png
 
 # Batch process directory
-python cli_testnet.py batch ./images/ -o results.json
+python ProPy\cli_testnet.py batch ./images/ -o results.json
 
 # Create Merkle tree
-python cli_testnet.py merkle results.json -o tree.json
+python ProPy\cli_testnet.py merkle results.json -o tree.json
 ```
 
 ### For Python Developers
