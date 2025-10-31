@@ -300,32 +300,17 @@ valid = tree.verify_proof(0, proof, root)
 
 ### security.txt Standard
 
-ProTRACE implements [Neodyme Labs' security.txt](https://github.com/neodyme-labs/solana-security-txt) standard:
-
 ```bash
 # Query security information
 cargo install query-security-txt
 query-security-txt 7cjcAJv1fgJdwVSrabX9yVXCgyK1gKVnRUBFs1ZcG2sG --url devnet
 ```
 
-### Security Policy
-
-See [SECURITY.md](SECURITY.md) for:
-- Vulnerability reporting process
-- Response timelines (48 hours initial response)
-- Coordinated disclosure policy
-- Security best practices
-
-**Contact:** security@protrace.io
-
----
-
 ## 📖 Documentation
 
 - **[Python SDK Guide](ProPy/README.md)** - Python module documentation
 - **[Rust Crates Guide](ProRust/README.md)** - Rust library documentation
 - **[API Documentation](http://localhost:8000/docs)** - Interactive API docs (after starting server)
-- **[Security Policy](SECURITY.md)** - Security and disclosure
 - **[Deployment Guide](TESTNET_DEPLOYMENT.md)** - Deployment instructions
 
 ---
@@ -354,14 +339,13 @@ pytest tests/ -v
 
 ## 🤝 Contributing
 
-We welcome contributions! Please:
+We welcome contributions!
 
 1. Fork the repository
 2. Create a feature branch
 3. Make your changes with tests
 4. Submit a pull request
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines (coming soon).
 
 ---
 
@@ -369,22 +353,12 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines (coming soon).
 
 This project is licensed under the MIT License - see [LICENSE](LICENSE) file for details.
 
----
-
-## 🙏 Acknowledgments
-
-- **Solana Foundation** - Blockchain infrastructure
-- **Anchor Framework** - Solana program development
-- **Neodyme Labs** - security.txt standard
-- **BLAKE3 Team** - Fast cryptographic hashing
-- **Open Source Community** - Various dependencies
 
 ---
 
 ## 📞 Support
 
 - **General Questions**: hello@protrace.io
-- **Security Issues**: security@protrace.io
 - **Bug Reports**: [GitHub Issues](https://github.com/ProTRACE/ProTRACE/issues)
 - **Documentation**: This README and linked guides
 
