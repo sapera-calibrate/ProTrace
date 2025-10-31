@@ -561,14 +561,6 @@ query-security-txt 7cjcAJv1fgJdwVSrabX9yVXCgyK1gKVnRUBFs1ZcG2sG --url devnet
 
 **Security Policy**: [SECURITY.md](SECURITY.md)  
 **Response Time**: 48 hours for initial response  
-**Contact**: security@protrace.io
-
-### Audit Status
-
-- ✅ Code reviews: All changes reviewed by multiple developers
-- ✅ Automated testing: Comprehensive test suite with CI/CD
-- ✅ Security.txt: Embedded on-chain for researcher contact
-- ⏳ Professional audit: Scheduled (pending)
 
 ---
 
@@ -712,36 +704,6 @@ def classify_similarity(img1, img2):
 
 ---
 
-## 💼 Commercial Use
-
-### Integration Services
-
-Need help integrating ProTRACE into your platform?
-
-- 📧 **Contact**: hello@protrace.art
-- 🔧 **Custom Development**: Available
-- 📚 **Training**: Available for teams
-- 🛠️ **Support**: Priority support packages
-
----
-
-## 🎓 Learn More
-
-### Resources
-
-- **Perceptual Hashing**: [Article](https://www.phash.org/)
-- **Merkle Trees**: [Wikipedia](https://en.wikipedia.org/wiki/Merkle_tree)
-- **BLAKE3**: [Official Site](https://github.com/BLAKE3-team/BLAKE3)
-- **Solana Docs**: [docs.solana.com](https://docs.solana.com/)
-- **Anchor Framework**: [anchor-lang.com](https://www.anchor-lang.com/)
-
-### Research Papers
-
-- "Perceptual Image Hashing: A Survey" (IEEE, 2020)
-- "BLAKE3: One Function, Fast Everywhere" (2020)
-- "Merkle Trees for Data Verification" (1979)
-
----
 
 ## 📞 Community & Support
 
