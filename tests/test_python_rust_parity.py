@@ -10,7 +10,7 @@ from pathlib import Path
 import tempfile
 import hashlib
 
-sys.path.insert(0, str(Path(__file__).parent / "ProPy"))
+sys.path.insert(0, str(Path(__file__).parent.parent / "ProPy"))
 
 print("=" * 80)
 print("🔄 ProTRACE Python-Rust Parity Test")
@@ -63,7 +63,7 @@ except Exception as e:
 print()
 
 print("2. Checking Rust DNA extraction crate...")
-rust_dna_crate = Path(__file__).parent / "ProRust" / "crates" / "dna-extraction"
+rust_dna_crate = Path(__file__).parent.parent / "ProRust" / "crates" / "dna-extraction"
 if rust_dna_crate.exists() and (rust_dna_crate / "src" / "lib.rs").exists():
     print("✅ Rust DNA extraction crate exists")
     print(f"✅ Location: {rust_dna_crate}")
@@ -128,7 +128,7 @@ except Exception as e:
 print()
 
 print("2. Checking Rust Merkle tree crate...")
-rust_merkle_crate = Path(__file__).parent / "ProRust" / "crates" / "merkle-tree"
+rust_merkle_crate = Path(__file__).parent.parent / "ProRust" / "crates" / "merkle-tree"
 if rust_merkle_crate.exists() and (rust_merkle_crate / "src" / "lib.rs").exists():
     print("✅ Rust Merkle tree crate exists")
     print(f"✅ Location: {rust_merkle_crate}")
@@ -160,8 +160,8 @@ print()
 
 print("Python Modules:")
 python_modules = {
-    "DNA Extraction": Path(__file__).parent / "ProPy" / "modules" / "protrace_legacy" / "image_dna.py",
-    "Merkle Tree": Path(__file__).parent / "ProPy" / "modules" / "protrace_legacy" / "merkle.py",
+    "DNA Extraction": Path(__file__).parent.parent / "ProPy" / "modules" / "protrace_legacy" / "image_dna.py",
+    "Merkle Tree": Path(__file__).parent.parent / "ProPy" / "modules" / "protrace_legacy" / "merkle.py",
 }
 
 for name, path in python_modules.items():
@@ -175,8 +175,8 @@ print()
 
 print("Rust Crates:")
 rust_crates = {
-    "DNA Extraction": Path(__file__).parent / "ProRust" / "crates" / "dna-extraction",
-    "Merkle Tree": Path(__file__).parent / "ProRust" / "crates" / "merkle-tree",
+    "DNA Extraction": Path(__file__).parent.parent / "ProRust" / "crates" / "dna-extraction",
+    "Merkle Tree": Path(__file__).parent.parent / "ProRust" / "crates" / "merkle-tree",
 }
 
 for name, path in rust_crates.items():

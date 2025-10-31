@@ -9,7 +9,7 @@ import os
 from pathlib import Path
 import tempfile
 
-sys.path.insert(0, str(Path(__file__).parent / "ProPy"))
+sys.path.insert(0, str(Path(__file__).parent.parent / "ProPy"))
 
 print("=" * 80)
 print("🎯 ProTRACE FINAL COMPREHENSIVE TEST")
@@ -135,7 +135,9 @@ print("6️⃣  Verifying Merkle proof...")
 if merkle_ok:
     try:
         proof = tree.get_proof(0)
-        is_valid = tree.verify_proof(0, proof)
+        leaf_data = tree.leaves[0]  # Get the actual leaf data
+        root = tree.get_root()
+        is_valid = tree.verify_proof(leaf_data, proof, root)
         print(f"✅ Proof size: {len(proof)}")
         print(f"✅ Valid:      {is_valid}")
     except Exception as e:
@@ -151,7 +153,7 @@ print("🦀 CHECKING RUST ECOSYSTEM")
 print("-" * 80)
 print()
 
-rust_dir = Path(__file__).parent / "ProRust" / "crates"
+rust_dir = Path(__file__).parent.parent / "ProRust" / "crates"
 rust_crates = []
 
 if rust_dir.exists():
@@ -178,8 +180,8 @@ print("🔗 CHECKING SOLANA PROGRAM")
 print("-" * 80)
 print()
 
-program_file = Path(__file__).parent / "ProRust" / "target" / "deploy" / "protrace.so"
-idl_file = Path(__file__).parent / "ProRust" / "target" / "idl" / "protrace.json"
+program_file = Path(__file__).parent.parent / "ProRust" / "target" / "deploy" / "protrace.so"
+idl_file = Path(__file__).parent.parent / "ProRust" / "target" / "idl" / "protrace.json"
 
 if program_file.exists():
     size_kb = program_file.stat().st_size / 1024

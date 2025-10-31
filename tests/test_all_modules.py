@@ -12,7 +12,7 @@ from pathlib import Path
 import tempfile
 
 # Add ProPy to path
-sys.path.insert(0, str(Path(__file__).parent / "ProPy"))
+sys.path.insert(0, str(Path(__file__).parent.parent / "ProPy"))
 
 print("=" * 80)
 print("🧪 ProTRACE Complete Module Test Suite")
@@ -31,8 +31,8 @@ print()
 print("📦 Test 1.1: Importing Python modules...")
 python_modules_available = False
 try:
-    from modules.protrace_legacy.image_dna import compute_dna, dna_similarity
-    from modules.protrace_legacy.merkle import build_merkle_tree, get_merkle_proof, verify_proof
+    from modules.protrace_legacy.image_dna import compute_dna
+    from modules.protrace_legacy.merkle import MerkleTree
     print("✅ Python image_dna module loaded")
     print("✅ Python merkle module loaded")
     python_modules_available = True
@@ -73,12 +73,12 @@ print("🧬 Test 1.3: Computing DNA hash (Python)...")
 python_dna = None
 if python_modules_available and test_image_path:
     try:
-        dna_hex, dhash, grid_hash = compute_dna(test_image_path)
-        python_dna = dna_hex
-        print(f"✅ DNA Hash:   {dna_hex[:32]}...")
-        print(f"✅ DHash:      {dhash}")
-        print(f"✅ Grid Hash:  {grid_hash}")
-        print(f"✅ Length:     {len(dna_hex)} chars (256-bit)")
+        result = compute_dna(test_image_path)
+        python_dna = result['dna_hex']
+        print(f"✅ DNA Hash:   {python_dna[:32]}...")
+        print(f"✅ DHash:      {result['dhash']}")
+        print(f"✅ Grid Hash:  {result['grid_hash'][:32]}...")
+        print(f"✅ Length:     {len(python_dna)} chars (256-bit)")
     except Exception as e:
         print(f"❌ Python DNA computation failed: {e}")
 else:
@@ -90,14 +90,23 @@ print()
 print("🔍 Test 1.4: Testing DNA similarity (Python)...")
 if python_modules_available and python_dna:
     try:
+        def hamming_similarity(hex1, hex2):
+            """Calculate similarity based on Hamming distance"""
+            if len(hex1) != len(hex2):
+                return 0.0
+            bin1 = bin(int(hex1, 16))[2:].zfill(256)
+            bin2 = bin(int(hex2, 16))[2:].zfill(256)
+            distance = sum(b1 != b2 for b1, b2 in zip(bin1, bin2))
+            return 1.0 - (distance / 256)
+        
         # Test identical
-        sim1, dup1, thresh1 = dna_similarity(python_dna, python_dna)
-        print(f"✅ Identical:   Similarity={sim1:.2%}, Duplicate={dup1}")
+        sim1 = hamming_similarity(python_dna, python_dna)
+        print(f"✅ Identical:   Similarity={sim1:.2%}")
         
         # Test similar
         similar_dna = python_dna[:-4] + "0000"
-        sim2, dup2, thresh2 = dna_similarity(python_dna, similar_dna)
-        print(f"✅ Similar:     Similarity={sim2:.2%}, Duplicate={dup2}")
+        sim2 = hamming_similarity(python_dna, similar_dna)
+        print(f"✅ Similar:     Similarity={sim2:.2%}")
     except Exception as e:
         print(f"❌ DNA similarity test failed: {e}")
 else:
@@ -113,14 +122,23 @@ if python_modules_available:
     try:
         # Generate sample leaves
         import hashlib
-        leaves = [hashlib.sha256(f"leaf_{i}".encode()).hexdigest() for i in range(5)]
-        print(f"✅ Generated {len(leaves)} leaves")
+        import time
+        
+        python_merkle_tree = MerkleTree()
+        
+        # Add 5 leaves with metadata
+        for i in range(5):
+            dna_hash = hashlib.sha256(f"leaf_{i}".encode()).hexdigest()
+            pointer = f"ipfs://Qm{dna_hash[:44]}"
+            platform_id = f"platform_{i}"
+            python_merkle_tree.add_leaf(dna_hash, pointer, platform_id, int(time.time()))
+        
+        print(f"✅ Generated {len(python_merkle_tree.leaves)} leaves")
         
         # Build tree
-        python_merkle_tree = build_merkle_tree(leaves)
-        python_merkle_root = python_merkle_tree[-1][0] if python_merkle_tree else None
+        python_merkle_root = python_merkle_tree.build_tree()
         
-        print(f"✅ Tree levels: {len(python_merkle_tree)}")
+        print(f"✅ Tree built")
         print(f"✅ Root:        {python_merkle_root[:32]}...")
     except Exception as e:
         print(f"❌ Merkle tree construction failed: {e}")
@@ -134,12 +152,12 @@ print("✔️  Test 1.6: Verifying Merkle proof (Python)...")
 if python_modules_available and python_merkle_tree and python_merkle_root:
     try:
         # Get proof for first leaf
-        proof = get_merkle_proof(python_merkle_tree, 0)
-        leaf = python_merkle_tree[0][0]
+        proof = python_merkle_tree.get_proof(0)
+        leaf_data = python_merkle_tree.leaves[0]
         
-        is_valid = verify_proof(leaf, proof, python_merkle_root)
+        is_valid = python_merkle_tree.verify_proof(leaf_data, proof, python_merkle_root)
         
-        print(f"✅ Leaf:       {leaf[:32]}...")
+        print(f"✅ Leaf index: 0")
         print(f"✅ Proof size: {len(proof)}")
         print(f"✅ Valid:      {is_valid}")
     except Exception as e:

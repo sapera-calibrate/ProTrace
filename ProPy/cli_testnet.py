@@ -32,7 +32,7 @@ def cmd_extract_dna(args):
     start_time = time.time()
     
     try:
-        result = compute_dna(args.image)
+        result = compute_dna(str(args.image))
         extraction_time = (time.time() - start_time) * 1000
         
         print("✅ DNA Extraction Complete")
@@ -85,8 +85,11 @@ def cmd_create_merkle(args):
             leaves = data
         elif isinstance(data, dict) and 'leaves' in data:
             leaves = data['leaves']
+        elif isinstance(data, dict) and 'results' in data:
+            # Handle batch output format
+            leaves = [item['dna_hash'] for item in data['results']]
         else:
-            print("❌ Invalid input format. Expected list of DNA hashes or {leaves: [...]}")
+            print("❌ Invalid input format. Expected list of DNA hashes, {leaves: [...]}, or batch output")
             return 1
         
         if not leaves:

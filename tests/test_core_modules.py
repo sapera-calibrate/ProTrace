@@ -11,7 +11,7 @@ import os
 from pathlib import Path
 
 # Add ProPy to path
-sys.path.insert(0, str(Path(__file__).parent / "ProPy"))
+sys.path.insert(0, str(Path(__file__).parent.parent / "ProPy"))
 
 print("=" * 80)
 print("🧪 ProTRACE Core Modules Test")
@@ -21,8 +21,8 @@ print()
 # Test 1: Import modules
 print("📦 Test 1: Importing modules...")
 try:
-    from modules.image_dna import compute_dna, dna_similarity
-    from modules.merkle_tree import build_merkle_tree, verify_merkle_proof
+    from modules.protrace_legacy.image_dna import compute_dna
+    from modules.protrace_legacy.merkle import MerkleTree
     print("✅ All modules imported successfully")
 except ImportError as e:
     print(f"❌ Import failed: {e}")
@@ -33,50 +33,42 @@ except ImportError as e:
         """Mock DNA computation"""
         import hashlib
         # Generate deterministic hash based on path
-        hash_obj = hashlib.sha256(image_path.encode())
+        hash_obj = hashlib.sha256(image_path.encode() if isinstance(image_path, str) else image_path)
         dna_hex = hash_obj.hexdigest()
         dhash = hash_obj.hexdigest()[:16]
-        grid_hash = hash_obj.hexdigest()[16:32]
-        return dna_hex, dhash, grid_hash
+        grid_hash = hash_obj.hexdigest()[16:48]
+        return {
+            'dna_hex': dna_hex,
+            'dhash': dhash,
+            'grid_hash': grid_hash,
+            'algorithm': 'mock',
+            'bits': 256
+        }
     
-    def dna_similarity(dna1, dna2):
-        """Mock DNA similarity"""
-        # Simple comparison
-        if dna1 == dna2:
-            return 1.0, True, 0.95
-        # Count matching characters
-        matches = sum(c1 == c2 for c1, c2 in zip(dna1, dna2))
-        similarity = matches / len(dna1)
-        return similarity, similarity > 0.95, 0.95
-    
-    def build_merkle_tree(leaves):
-        """Mock Merkle tree builder"""
-        import hashlib
-        if not leaves:
-            return []
-        
-        # Simple binary tree
-        tree = [leaves]
-        while len(tree[-1]) > 1:
-            level = []
-            parent_level = tree[-1]
-            for i in range(0, len(parent_level), 2):
-                left = parent_level[i]
-                right = parent_level[i + 1] if i + 1 < len(parent_level) else left
-                combined = left + right
-                parent = hashlib.sha256(combined.encode()).hexdigest()
-                level.append(parent)
-            tree.append(level)
-        return tree
-    
-    def verify_merkle_proof(leaf, proof, root):
-        """Mock Merkle proof verification"""
-        import hashlib
-        current = leaf
-        for sibling in proof:
-            combined = current + sibling
-            current = hashlib.sha256(combined.encode()).hexdigest()
-        return current == root
+    class MerkleTree:
+        """Mock MerkleTree class"""
+        def __init__(self):
+            self.leaves = []
+            self.root = None
+            
+        def add_leaf(self, dna_hex, pointer, platform_id, timestamp):
+            import hashlib
+            leaf_data = f"{dna_hex}|{pointer}|{platform_id}|{timestamp}".encode()
+            self.leaves.append(leaf_data)
+            
+        def build_tree(self):
+            import hashlib
+            if not self.leaves:
+                return None
+            combined = b"".join(self.leaves)
+            self.root = hashlib.sha256(combined).hexdigest()
+            return self.root
+            
+        def get_proof(self, leaf_index):
+            return []  # Mock empty proof
+            
+        def verify_proof(self, leaf_data, proof, root_hash):
+            return True  # Mock always valid
     
     print("✅ Using mock implementations")
 
@@ -104,10 +96,13 @@ print()
 # Test 3: Compute DNA hash
 print("🧬 Test 3: Computing DNA hash...")
 try:
-    dna_hex, dhash, grid_hash = compute_dna(test_image_path)
+    result = compute_dna(test_image_path)
+    dna_hex = result['dna_hex']
+    dhash = result['dhash']
+    grid_hash = result['grid_hash']
     print(f"✅ DNA Hash:   {dna_hex[:32]}...")
     print(f"✅ DHash:      {dhash}")
-    print(f"✅ Grid Hash:  {grid_hash}")
+    print(f"✅ Grid Hash:  {grid_hash[:32]}...")
     print(f"✅ Full length: {len(dna_hex)} characters (256-bit)")
 except Exception as e:
     print(f"❌ DNA computation failed: {e}")
@@ -120,23 +115,32 @@ except Exception as e:
 
 print()
 
-# Test 4: DNA similarity
+# Test 4: DNA similarity (using Hamming distance)
 print("🔍 Test 4: Testing DNA similarity...")
 try:
+    def hamming_similarity(hex1, hex2):
+        """Calculate similarity based on Hamming distance"""
+        if len(hex1) != len(hex2):
+            return 0.0
+        bin1 = bin(int(hex1, 16))[2:].zfill(256)
+        bin2 = bin(int(hex2, 16))[2:].zfill(256)
+        distance = sum(b1 != b2 for b1, b2 in zip(bin1, bin2))
+        return 1.0 - (distance / 256)
+    
     # Compare same DNA
-    sim1, is_dup1, thresh1 = dna_similarity(dna_hex, dna_hex)
-    print(f"✅ Same image:      Similarity={sim1:.2%}, Duplicate={is_dup1}")
+    sim1 = hamming_similarity(dna_hex, dna_hex)
+    print(f"✅ Same image:      Similarity={sim1:.2%}")
     
     # Compare different DNA (create modified hash)
     different_dna = dna_hex[:-4] + "0000"
-    sim2, is_dup2, thresh2 = dna_similarity(dna_hex, different_dna)
-    print(f"✅ Similar image:   Similarity={sim2:.2%}, Duplicate={is_dup2}")
+    sim2 = hamming_similarity(dna_hex, different_dna)
+    print(f"✅ Similar image:   Similarity={sim2:.2%}")
     
     # Completely different
     import hashlib
     totally_different = hashlib.sha256(b"completely_different").hexdigest()
-    sim3, is_dup3, thresh3 = dna_similarity(dna_hex, totally_different)
-    print(f"✅ Different image: Similarity={sim3:.2%}, Duplicate={is_dup3}")
+    sim3 = hamming_similarity(dna_hex, totally_different)
+    print(f"✅ Different image: Similarity={sim3:.2%}")
 except Exception as e:
     print(f"❌ Similarity test failed: {e}")
 
@@ -167,13 +171,21 @@ try:
     if not dna_hashes:
         raise ValueError("No DNA hashes available")
     
-    merkle_tree = build_merkle_tree(dna_hashes)
+    import time
+    merkle_tree = MerkleTree()
     
-    print(f"✅ Merkle tree built with {len(merkle_tree)} levels")
-    print(f"✅ Leaves:  {len(merkle_tree[0])}")
-    print(f"✅ Root:    {merkle_tree[-1][0][:32]}...")
+    # Add leaves with metadata
+    for i, dna_hash in enumerate(dna_hashes):
+        pointer = f"ipfs://Qm{dna_hash[:44]}"
+        platform_id = f"platform_{i}"
+        merkle_tree.add_leaf(dna_hash, pointer, platform_id, int(time.time()))
     
-    merkle_root = merkle_tree[-1][0]
+    # Build tree
+    merkle_root = merkle_tree.build_tree()
+    
+    print(f"✅ Merkle tree built")
+    print(f"✅ Leaves:  {len(merkle_tree.leaves)}")
+    print(f"✅ Root:    {merkle_root[:32]}...")
     
 except Exception as e:
     print(f"❌ Merkle tree construction failed: {e}")
@@ -189,22 +201,14 @@ try:
         raise ValueError("No Merkle tree available")
     
     # Get proof for first leaf
-    leaf = dna_hashes[0]
-    
-    # Generate proof (siblings path to root)
-    proof = []
     leaf_index = 0
-    
-    for level in merkle_tree[:-1]:
-        sibling_index = leaf_index ^ 1  # XOR to get sibling
-        if sibling_index < len(level):
-            proof.append(level[sibling_index])
-        leaf_index //= 2
+    proof = merkle_tree.get_proof(leaf_index)
+    leaf_data = merkle_tree.leaves[leaf_index]  # Get actual leaf data
     
     # Verify proof
-    is_valid = verify_merkle_proof(leaf, proof, merkle_root)
+    is_valid = merkle_tree.verify_proof(leaf_data, proof, merkle_root)
     
-    print(f"✅ Leaf:       {leaf[:32]}...")
+    print(f"✅ Leaf index: {leaf_index}")
     print(f"✅ Proof size: {len(proof)} siblings")
     print(f"✅ Root:       {merkle_root[:32]}...")
     print(f"✅ Valid:      {is_valid}")

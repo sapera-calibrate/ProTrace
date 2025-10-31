@@ -10,7 +10,7 @@ from pathlib import Path
 import tempfile
 
 # Add ProPy to path
-sys.path.insert(0, str(Path(__file__).parent / "ProPy"))
+sys.path.insert(0, str(Path(__file__).parent.parent / "ProPy"))
 
 print("=" * 80)
 print("🧪 ProTRACE Comprehensive Module Test (Fixed)")
@@ -200,7 +200,7 @@ print()
 
 print("📦 Test 2.1: Checking Rust crates...")
 rust_crates = []
-rust_dir = Path(__file__).parent / "ProRust" / "crates"
+rust_dir = Path(__file__).parent.parent / "ProRust" / "crates"
 if rust_dir.exists():
     for crate_path in rust_dir.iterdir():
         if crate_path.is_dir() and (crate_path / "Cargo.toml").exists():
@@ -226,8 +226,8 @@ print()
 
 print("📦 Test 3.1: Checking Solana deployment...")
 solana_program_deployed = False
-program_path = Path(__file__).parent / "ProRust" / "target" / "deploy" / "protrace.so"
-idl_path = Path(__file__).parent / "ProRust" / "target" / "idl" / "protrace.json"
+program_path = Path(__file__).parent.parent / "ProRust" / "target" / "deploy" / "protrace.so"
+idl_path = Path(__file__).parent.parent / "ProRust" / "target" / "idl" / "protrace.json"
 
 if program_path.exists():
     size_mb = program_path.stat().st_size / (1024 * 1024)
